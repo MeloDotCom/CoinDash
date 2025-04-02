@@ -1,0 +1,93 @@
+[gd_scene load_steps=14 format=3 uid="uid://dvaty1bfrma1k"]
+
+[ext_resource type="Texture2D" uid="uid://bhhhbmhq1ge0k" path="res://assets/grass.png" id="1_0xm2m"]
+[ext_resource type="Script" uid="uid://fgd6df7ot56s" path="res://main.gd" id="1_h2yge"]
+[ext_resource type="PackedScene" uid="uid://c4psfojrs2aq8" path="res://Coin.tscn" id="2_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://4k5mrx2l07is" path="res://Player.tscn" id="2_h2yge"]
+[ext_resource type="PackedScene" uid="uid://dnls35ino7k32" path="res://powerup.tscn" id="3_4c57u"]
+[ext_resource type="PackedScene" uid="uid://scah1ny8dqy6" path="res://hud.tscn" id="5_lquwl"]
+[ext_resource type="AudioStream" uid="uid://2bebg6ti0ttq" path="res://assets/audio/Coin.wav" id="6_272bh"]
+[ext_resource type="AudioStream" uid="uid://dyh063wdedxtp" path="res://assets/audio/EndSound.wav" id="7_5vw27"]
+[ext_resource type="AudioStream" uid="uid://c6nmw7ovhy84x" path="res://assets/audio/Level.wav" id="7_kek77"]
+[ext_resource type="AudioStream" uid="uid://c76fnbvxo4qn0" path="res://assets/audio/Powerup.wav" id="9_kek77"]
+[ext_resource type="PackedScene" uid="uid://1brq80jsx1ud" path="res://cactus.tscn" id="11_efxa6"]
+[ext_resource type="Script" uid="uid://dm2txeov1fjla" path="res://addons/virtual_joystick/scripts/virtual_joystick.gd" id="12_ycdy4"]
+[ext_resource type="Texture2D" uid="uid://bc6paavcnnwf6" path="res://addons/virtual_joystick/sprites/stick_pressed.png" id="13_w48qg"]
+
+[node name="Main" type="Node"]
+script = ExtResource("1_h2yge")
+coin_scene = ExtResource("2_1bvp3")
+powerup_scene = ExtResource("3_4c57u")
+
+[node name="Background" type="TextureRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_0xm2m")
+stretch_mode = 1
+
+[node name="Player" parent="." instance=ExtResource("2_h2yge")]
+
+[node name="GameTimer" type="Timer" parent="."]
+
+[node name="HUD" parent="." instance=ExtResource("5_lquwl")]
+
+[node name="VirtualJoystick" type="Node2D" parent="HUD"]
+position = Vector2(375, 617)
+script = ExtResource("12_ycdy4")
+stick_pressed = ExtResource("13_w48qg")
+metadata/_custom_type_script = "uid://dm2txeov1fjla"
+
+[node name="SpinBox" type="SpinBox" parent="HUD"]
+offset_left = 7.0
+offset_top = 681.0
+offset_right = 93.5625
+offset_bottom = 712.0
+max_value = 10000.0
+
+[node name="LevelSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_kek77")
+
+[node name="CoinSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_272bh")
+
+[node name="EndSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_5vw27")
+
+[node name="PowerupTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="PowerupSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("9_kek77")
+
+[node name="Cactus" parent="." instance=ExtResource("11_efxa6")]
+position = Vector2(145, 599)
+
+[node name="Cactus5" parent="." instance=ExtResource("11_efxa6")]
+position = Vector2(408, 123)
+
+[node name="Cactus2" parent="." instance=ExtResource("11_efxa6")]
+position = Vector2(413, 477)
+
+[node name="Cactus3" parent="." instance=ExtResource("11_efxa6")]
+position = Vector2(58, 474)
+
+[node name="Cactus7" parent="." instance=ExtResource("11_efxa6")]
+position = Vector2(115, 225)
+
+[node name="Cactus4" parent="." instance=ExtResource("11_efxa6")]
+position = Vector2(340, 281)
+
+[node name="Cactus6" parent="." instance=ExtResource("11_efxa6")]
+position = Vector2(235, 94)
+
+[connection signal="hurt" from="Player" to="." method="_on_player_hurt"]
+[connection signal="pickup" from="Player" to="." method="_on_player_pickup"]
+[connection signal="timeout" from="GameTimer" to="." method="_on_game_timer_timeout"]
+[connection signal="start_game" from="HUD" to="." method="_on_hud_start_game"]
+[connection signal="analogic_change" from="HUD/VirtualJoystick" to="Player" method="_on_virtual_joystick_analogic_change"]
+[connection signal="value_changed" from="HUD/SpinBox" to="Player" method="_on_spin_box_value_changed"]
+[connection signal="timeout" from="PowerupTimer" to="." method="_on_powerup_timer_timeout"]
+[connection signal="area_entered" from="Cactus5" to="." method="_on_cactus_5_area_entered"]
